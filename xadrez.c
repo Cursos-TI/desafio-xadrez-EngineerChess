@@ -1,90 +1,95 @@
-
-// Desafio de Xadrez - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de movimentação das peças de xadrez.
-// O objetivo é utilizar estruturas de repetição e funções para determinar os limites de movimentação dentro do jogo.
-// Estrutura de repetição for, while, do-while e implementações aninhadas loop em loop.
-
 #include <stdio.h>
 
 /*
-Desafio: Movimentando as Peças do Xadrez
-Autor: Jardel Santos
-Nível: Aventureiro
-Linguagem: C
+    Desafio Mestre: Movimentação Recursiva de Peças de Xadrez
+    Autor: Jardel Santos
+    Nível: Mestre
+    Linguagem: C
 
-Objetivo:
-- Simular os movimentos da Torre, do Bispo, da Rainha e do Cavalo.
-- Usar diferentes estruturas de repetição:
-  * Torre  -> for
-  * Bispo  -> while
-  * Rainha -> do-while
-  * Cavalo -> loops aninhados (for + while)
+    Objetivo do Programa:
+    - Simular os movimentos das peças Torre, Bispo, Rainha e Cavalo no tabuleiro de xadrez.
+    - Demonstrar o uso de recursividade (Torre, Bispo e Rainha) e loops complexos (Cavalo).
+    - Fornecer saída detalhada de cada movimento, informando a direção e a casa percorrida.
+    - Estrutura do código organizada para fácil entendimento e manutenção.
+    
+    Movimentos simulados:
+    - Torre  -> horizontal/vertical (usando recursão)
+    - Bispo  -> diagonal (usando recursão avançada)
+    - Rainha -> todas as direções (recursão)
+    - Cavalo -> movimento em "L" (loops aninhados com controle de fluxo)
+        
 */
 
-int main()
-{
-    // --- TORRE -------------------------------------------------------------
-    int iT;
-    int movimento_torre = 5;
+// ------------------ TORRE ------------------
+// Recursão simples para movimento em linha reta (horizontal ou vertical)
+void moverTorre(int casas, int passo) {
+    if (passo > casas) return; // Caso base: todas as casas percorridas
+    printf("Torre: Direita (%d)\n", passo); // Exibe a direção e o passo atual
+    moverTorre(casas, passo + 1);          // Chamada recursiva para a próxima casa
+}
 
-    printf("=== Movimento da TORRE ===\n");
-    for (iT = 1; iT <= movimento_torre; iT++)
-    {
-        printf("Direita (%d)\n", iT);
-    }
+// ------------------ BISPO ------------------
+// Recursão avançada para movimento diagonal (cima e direita)
+// Cada chamada move uma casa diagonalmente até atingir o número total de casas
+void moverBispo(int casasRestantes, int passoAtual) {
+    if (passoAtual > casasRestantes) return; // Caso base
+    printf("Bispo: Cima, Direita (%d)\n", passoAtual); // Mostra a casa atual
+    moverBispo(casasRestantes, passoAtual + 1);        // Próxima casa diagonal
+}
 
-    // --- BISPO -------------------------------------------------------------
-    int movimento_bispo = 5;
-    int iB = 1;
+// ------------------ RAINHA ------------------
+// Recursão simples para movimento em linha (neste caso, para a esquerda)
+// Cada passo é exibido na saída
+void moverRainha(int casas, int passo) {
+    if (passo > casas) return; // Caso base
+    printf("Rainha: Esquerda (%d)\n", passo);
+    moverRainha(casas, passo + 1); // Próxima casa
+}
 
-    printf("\n=== Movimento do BISPO ===\n");
-    while (iB <= movimento_bispo)
-    {
-        printf("Cima, Direita (%d)\n", iB);
-        iB++;
-    }
-
-    // --- RAINHA ------------------------------------------------------------
-    int movimento_rainha = 8;
-    int iR = 1;
-
-    printf("\n=== Movimento da RAINHA ===\n");
-    do
-    {
-        printf("Esquerda (%d)\n", iR);
-        iR++;
-    } while (iR <= movimento_rainha);
-
-    // --- CAVALO ------------------------------------------------------------
-    // O Cavalo move-se em "L":
-    // Neste caso, 2 casas para BAIXO e 1 casa para a ESQUERDA.
-    // Aqui usamos loops aninhados: for (externo) e while (interno)
-
-    int movimento_baixo = 2;
-    int movimento_esquerda = 1;
-
-    printf("\n=== Movimento do CAVALO ===\n");
-
-    // Loop externo: movimenta para baixo (2 casas)
-    for (int passo_baixo = 1; passo_baixo <= movimento_baixo; passo_baixo++)
-    {
-        printf("Baixo (%d)\n", passo_baixo);
-
-        // Quando atingir o último movimento para baixo,
-        // o cavalo faz o movimento perpendicular (1 casa para a esquerda)
-        if (passo_baixo == movimento_baixo)
-        {
-            int passo_esquerda = 1;
-            while (passo_esquerda <= movimento_esquerda)
-            {
-                printf("Esquerda (%d)\n", passo_esquerda);
-                passo_esquerda++;
+// ------------------ CAVALO ------------------
+// Movimento em "L" (duas casas para cima e uma para a direita)
+// Utiliza loops aninhados com controle de fluxo (while) para simular movimento perpendicular
+void moverCavalo(int casasCima, int casasDireita) {
+    for (int passoCima = 1; passoCima <= casasCima; passoCima++) {
+        printf("Cavalo: Cima (%d)\n", passoCima);
+        int passoDireita = 1;
+        while (passoDireita <= casasDireita) {
+            if (passoCima == casasCima) { // Movimento horizontal só após completar vertical
+                printf("Cavalo: Direita (%d)\n", passoDireita);
             }
+            passoDireita++;
         }
     }
+}
 
-    // Fim do programa
-    printf("\nSimulação concluída!\n\n");
+// ------------------ MAIN ------------------
+int main() {
+    printf("=== Simulação Mestre de Xadrez (Recursivo Avançado) ===\n\n");
 
+    // Torre
+    int movimentoTorre = 5;
+    printf("=== Movimento da TORRE ===\n");
+    moverTorre(movimentoTorre, 1);
+    printf("\n");
+
+    // Bispo
+    int movimentoBispo = 5;
+    printf("=== Movimento do BISPO ===\n");
+    moverBispo(movimentoBispo, 1);
+    printf("\n");
+
+    // Rainha
+    int movimentoRainha = 8;
+    printf("=== Movimento da RAINHA ===\n");
+    moverRainha(movimentoRainha, 1);
+    printf("\n");
+
+    // Cavalo
+    int movimentoCavaloCima = 2;
+    int movimentoCavaloDireita = 1;
+    printf("=== Movimento do CAVALO ===\n");
+    moverCavalo(movimentoCavaloCima, movimentoCavaloDireita);
+
+    printf("\nSimulação Desafio Nível Mestre concluída!\n");
     return 0;
 }
